@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary Application</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+</head>
+<body>
+
+    <audio class="sound">
+
+    </audio>
+    <div class="container">
+        <div class="search">
+            <input  class="inpword"type="text" placeholder="Enter Your Word Here..!">
+            <button class="search-btn"> 
+                <img src="./search_149852.png" alt="" height="20px" width="20px">
+            </button>
+        </div>
+        <div class="result">
+   
+            </div>
+        </div>
+    </div>
+<script>
+    const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
+    const result = document.querySelector(".result")
+    const btn = document.querySelector(".search-btn")
+    const sound = document.querySelector(".sound")
+    btn.addEventListener('click', async ()=>{
+        let inpword = document.querySelector('.inpword').value
+        const response = await fetch (url+inpword)
+       
+        if(response.ok){
+            const response = await fetch (url+inpword)
+            let data = await response.json()
+            console.log(data);
+            result.innerHTML=`
+            <div class="word">
+                <h3 class="input-word">${inpword}</h3>
+                <button  class="btn btn-dark" onclick"playSound()"><i class="bi bi-volume-up-fill"></i></button>
+        </div>
+
+        <div class="details">
+            <p>${data[0].meanings[0].partOfSpeech}</p>
+            <p>${data[0].phonetic}</p>
+        </div>
+        <div class="other-details">
+            <p class="word-detail">${data[0].meanings[0].definitions[0].definition}</p>
+            <p class="word-example">${data[0].meanings[0].definitions[0].example || ""}</p>
+        </div>
+            `;
+        
+        sound.setAttribute("src", `https\\${data[0].phonetics[0].audio}`)
+    }
+    else{
+            result.innerHTML`<h3> Could Not Find The Word</h3>`
+        }
+
+        function playSound(){
+            sound.play()
+        }
+    })
+</script>
+</body>
+</html>
